@@ -60,7 +60,7 @@ int cpe_get_igd_di_softwareversion(cwmp_t * cwmp, const char * name, char ** val
 int cpe_get_igd_di_provisioningcode(cwmp_t * cwmp, const char * name, char ** value, pool_t * pool)
 {
 	FUNCTION_TRACE();
-    *value = cwmp_conf_pool_get(pool, "cwmp:cpe_pc");
+    *value = cwmp_conf_pool_get(pool, "cwmp:cpe_provisioning_code");
     return	FAULT_CODE_OK;
 }
 

@@ -3,7 +3,7 @@
   
   <model>
     <object name="InternetGatewayDevice">
-      <param name="DeviceSummary"                     get_func="TRF_Get_DeviceSummary"></param>
+      <param name="DeviceSummary"                     get_func="cpe_get_igd_device_summary"></param>
       <param name="LANDeviceNumberOfEntries"  get_func="TRF_Get_LANDeviceNumberOfEntries"></param>
       <param name="WANDeviceNumberOfEntries"  get_func="TRF_Get_WANDeviceNumberOfEntries"></param>
       <object name="DeviceInfo">
@@ -22,11 +22,11 @@
         <param name="ConnectionRequestPassword"     rw="1"      noti_rw="1"  get_func="cpe_get_igd_ms_connectionrequestpassword" set_func="cpe_set_igd_ms_connectionrequestpassword"></param>
         <param name="Username"                      rw="1"      noti_rw="1"  get_func="cpe_get_igd_ms_username"      set_func="cpe_set_igd_ms_username"></param>
         <param name="Password"                      rw="1"      noti_rw="1"  get_func="cpe_get_igd_ms_password"     set_func="cpe_set_igd_ms_password"></param>
-        <param name="URL"          noti_rw="1"      rw="1"                   get_func="cpe_get_igd_ms_url"  set_func="cpe_get_igd_ms_url"></param>
-        <param name="PeriodicInformEnable"          rw="1" noti_rw="1" type="s" get_func=""      set_func=""></param>
-        <param name="PeriodicInformInterval"        rw="1" noti_rw="1"  get_func=""    set_func=""></param>
+        <param name="URL"          noti_rw="1"      rw="1"                   get_func="cpe_get_igd_ms_url"  set_func="cpe_set_igd_ms_url"></param>
+        <param name="PeriodicInformEnable" 			rw="1" noti_rw="1" type="s" get_func="cpe_get_igd_ms_PeriodicInformEnable" set_func="cpe_set_igd_ms_PeriodicInformEnable"/>
+        <param name="PeriodicInformInterval" rw="1" noti_rw="1" get_func="cpe_get_igd_ms_PeriodicInformInterval" set_func="cpe_set_igd_ms_PeriodicInformInterval"/>
         <param name="PeriodicInformTime"            rw="1"          type="s" get_func=""        set_func=""></param>
-        <param name="ParameterKey" 						 get_func="" set_func=""/>
+        <param name="ParameterKey" 			rw="1" 	 get_func="cpe_get_igd_ms_parameterkey" set_func="cpe_set_igd_ms_parameterkey"></param>
         <param name="UDPConnectionRequestAddress"                            get_func="" set_func=""></param>
         <param name="UDPConnectionRequestAddressNotificationLimit"   get_func=""></param>
         <param name="STUNEnable"                    rw="1"          type="s" get_func=""        set_func=""></param>
@@ -49,7 +49,7 @@
                 <object name="{i}">
                   <param name="Enable"   		rw="1"		type="s" get_func="" set_func=""></param>
                   <param name="AddressingType"  noti_rw="1"	rw="1"   get_func="" set_func=""></param>
-                  <param name="ExternalIPAddress" noti_rw="1" rw="1"   get_func="" set_func=""></param>
+                  <param name="ExternalIPAddress" noti_rw="1" rw="1"   get_func="cpe_get_igd_WANIPConnection_ExternalIPAddress" set_func="cpe_set_igd_WANIPConnection_ExternalIPAddress"></param>
                   <param name="SubnetMask"   	noti_rw="1"	rw="1"   get_func="" set_func=""></param>
                   <param name="DefaultGateway"   			rw="1"   get_func="" set_func=""></param>
                   <param name="DNSServers"   				rw="1"   get_func="" set_func=""></param>

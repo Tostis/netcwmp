@@ -1379,14 +1379,16 @@ int cwmp_parse_getparametervalues_message(env_t * env , xmldoc_t * doc, paramete
 int  cwmp_parse_setparametervalues_message(env_t * env , xmldoc_t * doc, parameter_node_t * root, parameter_list_t ** ppl, fault_code_t *fault)
 {
     xmlnode_t * parameterListNode;
+    xmlnode_t * parameterKeyNode;
     xmlnode_t * parameterNode;
     parameter_t ** nextpv;
     int rc = CWMP_OK;
 
     parameterListNode = cwmp_xml_get_child_with_name(cwmp_get_rpc_method_node(doc), "ParameterList");
+    parameterKeyNode = cwmp_xml_get_child_with_name(cwmp_get_rpc_method_node(doc), "ParameterKey");
 
 
-    if (!parameterListNode || !ppl)
+    if (!parameterListNode || !ppl || !parameterKeyNode)
     {
         return CWMP_ERROR;
     }
@@ -1400,66 +1402,72 @@ int  cwmp_parse_setparametervalues_message(env_t * env , xmldoc_t * doc, paramet
 
     while (parameterNode)
     {
-	xmlnode_t * pnode  = parameterNode;
+    	xmlnode_t * pnode  = parameterNode;
 
-	parameterNode = XmlNodeGetNextSibling(parameterNode);
+    	parameterNode = XmlNodeGetNextSibling(parameterNode);
 
-        const char * name = cwmp_xml_get_node_value(cwmp_xml_get_child_with_name(pnode, "Name"));
-        const char * value = cwmp_xml_get_node_value(cwmp_xml_get_child_with_name(pnode, "Value"));
-	cwmp_log_debug("set parameter value (%s=%s)", name, value);
-	parameter_t * parameter = cwmp_create_parameter(env ,  name, value, TRstrlen(value), 0);
-	if (!parameter)
-        {
-            //faild
-            continue;
-        }
-        parameter_node_t * pn = cwmp_get_parameter_node(root, name);
-        if (!pn)
-        {
-            //Create Fault code;
-            parameter->fault_code = FAULT_CODE_9003;
-            cwmp_log_error("can not find parameter %s.", name);
-            continue;
-        }
-        else
-        {
-            parameter->type = pn->type;
+    	const char * name = cwmp_xml_get_node_value(cwmp_xml_get_child_with_name(pnode, "Name"));
+    	const char * value = cwmp_xml_get_node_value(cwmp_xml_get_child_with_name(pnode, "Value"));
+    	cwmp_log_debug("set parameter value (%s=%s)", name, value);
+    	parameter_t * parameter = cwmp_create_parameter(env ,  name, value, TRstrlen(value), 0);
+    	if (!parameter)
+    	{
+    		//faild
+    		continue;
+    	}
+    	parameter_node_t * pn = cwmp_get_parameter_node(root, name);
+    	if (!pn)
+    	{
+    		//Create Fault code;
+    		parameter->fault_code = FAULT_CODE_9003;
+    		cwmp_log_error("can not find parameter %s.", name);
+    		continue;
+    	}
+    	else
+    	{
+    		parameter->type = pn->type;
 
-            if(pn->set)
-            {
-		//exec set function
-		parameter->fault_code =  (*pn->set)(env->cwmp, name,  value, TRstrlen(value), callback_register_task);
-            }
-	    else
-	    {
-		parameter->fault_code = FAULT_CODE_9008;
-	    }
+    		if(pn->set)
+    		{
+    			//exec set function
+    			parameter->fault_code =  (*pn->set)(env->cwmp, name,  value, TRstrlen(value), callback_register_task);
+    		}
+    		else
+    		{
+    			parameter->fault_code = FAULT_CODE_9008;
+    		}
 
-	    if(parameter->fault_code != FAULT_CODE_OK)
-	    {
-		cwmp_set_faultcode(fault, FAULT_CODE_9003);
-		rc = CWMP_ERROR;
-	    }
+    		if(parameter->fault_code != FAULT_CODE_OK)
+    		{
+    			cwmp_set_faultcode(fault, FAULT_CODE_9003);
+    			rc = CWMP_ERROR;
+    		}
 
-            if ((*ppl)->count >= (*ppl)->size - 1)
-            {
-                parameter_t ** pp = XREALLOC((*ppl)->parameters, (*ppl)->size * sizeof(parameter_t*), sizeof(parameter_t*) * ((*ppl)->size + CWMP_RENEW_SIZE));
-                if (!pp)
-                {
-                    continue;
-                }
-                (*ppl)->parameters = pp;
-                (*ppl)->size += CWMP_RENEW_SIZE;
-            }
-	    (*ppl)->count += 1;
-            *nextpv = parameter;
-            nextpv++;
+    		if ((*ppl)->count >= (*ppl)->size - 1)
+    		{
+    			parameter_t ** pp = XREALLOC((*ppl)->parameters, (*ppl)->size * sizeof(parameter_t*), sizeof(parameter_t*) * ((*ppl)->size + CWMP_RENEW_SIZE));
+    			if (!pp)
+    			{
+    				continue;
+    			}
+    			(*ppl)->parameters = pp;
+    			(*ppl)->size += CWMP_RENEW_SIZE;
+    		}
+    		(*ppl)->count += 1;
+    		*nextpv = parameter;
+    		nextpv++;
 
-        }
+    	}
 
 
 
     }
+    
+    parameterNode = XmlNodeGetFirstChild(parameterKeyNode);
+    const char * name = "ParameterKey";
+    const char * value = parameterNode->nodeValue;
+    cwmp_log_debug("set parameter value (%s=%s)", name, value);
+    cwmp_conf_set("cwmp:parameterkey", value);
 
     return rc;
 }
@@ -1772,7 +1780,6 @@ xmlnode_t * cwmp_create_current_time_node(env_t * env ,   xmlnode_t * parent, co
     return currTimeNode;
 }
 
-
 xmlnode_t * cwmp_create_event_node(env_t * env ,  xmlnode_t * parent, const event_list_t * eventlist)
 {
     xmlnode_t * eventNode, *eventStructNode,  * eventCodeNode, * eventCommandKeyNode;
@@ -1796,7 +1803,8 @@ xmlnode_t * cwmp_create_event_node(env_t * env ,  xmlnode_t * parent, const even
 	if (pe[count]->event == INFORM_MREBOOT ) //|| pe[count]->event == INFORM_BOOTSTRAP)
 	{
         	ESA(eventCommandKeyNode, cwmp_xml_create_child_node(env ,  eventStructNode, NULL, "CommandKey", pe[count]->command_key));
-	}
+
+	}
 	else
 	{
 		ESA(eventCommandKeyNode, cwmp_xml_create_child_node(env ,  eventStructNode, NULL, "CommandKey", NULL));
@@ -2084,6 +2092,7 @@ void * cwmp_create_getparameternames_response_all_parameter_names(env_t * env , 
     }
     for (param_child = param_node->child; param_child; param_child = param_child->next_sibling)
     {
+        cwmp_log_info("name:%s\n", param_child->name);
         if(TRstrcmp(param_child->name, "{i}") == 0)
             continue;
         cwmp_buffer_init(&buffer);
@@ -2154,35 +2163,36 @@ xmldoc_t* cwmp_create_getparameternames_response_message(env_t * env ,
     }
     else
     {
-        if (next_level == CWMP_YES)
-        {
-            for (child = param_node->child; child; child = child->next_sibling)
-            {
-		if(TRstrcmp(child->name, "{i}") == 0)
-	            continue;
+        cwmp_create_getparameternames_response_all_parameter_names(env, parameterListNode, path_name, param_node, &count);
+        // if (next_level == CWMP_YES)
+        // {
+        //     for (child = param_node->child; child; child = child->next_sibling)
+        //     {
+		// if(TRstrcmp(child->name, "{i}") == 0)
+	    //         continue;
 
-                cwmp_buffer_init(&buffer);
-                if (child->type == TYPE_OBJECT)
-                {
-                    cwmp_buffer_write_format_string(&buffer,"%s%s.", path_name, child->name);
-                }
-                else
-                {
-                    cwmp_buffer_write_format_string(&buffer,"%s%s", path_name, child->name);
-                }
-                ESA(parameterInfoStructNode, cwmp_xml_create_child_node(env ,  parameterListNode, NULL, "ParameterInfoStruct", NULL));
-                ESA(parameterNameNode, cwmp_xml_create_child_node(env ,  parameterInfoStructNode, NULL, "Name", cwmp_buffer_string(&buffer)));
-                ESA(parameterWritableNode, cwmp_xml_create_child_node(env ,  parameterInfoStructNode, NULL, "Writable", child->rw==0? "0" : "1"));
-                count++;
+        //         cwmp_buffer_init(&buffer);
+        //         if (child->type == TYPE_OBJECT)
+        //         {
+        //             cwmp_buffer_write_format_string(&buffer,"%s%s.", path_name, child->name);
+        //         }
+        //         else
+        //         {
+        //             cwmp_buffer_write_format_string(&buffer,"%s%s", path_name, child->name);
+        //         }
+        //         ESA(parameterInfoStructNode, cwmp_xml_create_child_node(env ,  parameterListNode, NULL, "ParameterInfoStruct", NULL));
+        //         ESA(parameterNameNode, cwmp_xml_create_child_node(env ,  parameterInfoStructNode, NULL, "Name", cwmp_buffer_string(&buffer)));
+        //         ESA(parameterWritableNode, cwmp_xml_create_child_node(env ,  parameterInfoStructNode, NULL, "Writable", child->rw==0? "0" : "1"));
+        //         count++;
 
-            }
-        }
-        else
-        {
-            //all parameters
-            cwmp_create_getparameternames_response_all_parameter_names(env, parameterListNode, path_name, param_node, &count);
+        //     }
+        // }
+        // else
+        // {
+        //     //all parameters
+        //     cwmp_create_getparameternames_response_all_parameter_names(env, parameterListNode, path_name, param_node, &count);
 
-        }
+        // }
     }
 
     ESN(XML_OK, cwmp_xml_set_node_attribute(env ,  parameterListNode, SOAP_ENC_ARRAYTYPE, cwmp_get_format_string("cwmp:ParameterInfoStruct[%d]", count) ));

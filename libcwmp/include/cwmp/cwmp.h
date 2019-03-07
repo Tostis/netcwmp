@@ -36,8 +36,8 @@
 
 #define SOAP_ENV_NS  "http://schemas.xmlsoap.org/soap/envelope/"
 #define SOAP_ENC_NS "http://schemas.xmlsoap.org/soap/encoding/"
-#define SOAP_XSI_NS  "http://www.w3.org/1999/XMLSchema-instance"
-#define SOAP_XSD_NS  "http://www.w3.org/1999/XMLSchema"
+#define SOAP_XSI_NS  "http://www.w3.org/2001/XMLSchema-instance"
+#define SOAP_XSD_NS  "http://www.w3.org/2001/XMLSchema"
 #define SOAP_CWMP_NS "urn:dslforum-org:cwmp-1-0"
 
 
@@ -184,9 +184,24 @@
 #define UpTimeModule                        "UpTime"
 #define DeviceLogModule                     "DeviceLog"
 
+#define ServicesModule						"Services"
+#define VoiceServiceModule					"VoiceService"
+#define VoiceProfileModule					"VoiceProfile"
+#define NameModule							"Name"
+#define SIPModule							"SIP"
+#define ProxyServerModule					"ProxyServer"
+#define RegistrarServerModule				"RegistrarServer"
+#define UserAgentDomainModule				"UserAgentDomain"
+#define LineModule							"Line"
+#define EnableModule						"Enable"
+#define DirectoryNumberModule				"DirectoryNumber"
+#define AuthUserNameModule					"AuthUserName"
+#define AuthPasswordModule					"AuthPassword"
+
 
 #define ManagementServerModule              "ManagementServer"
 #define URLModule                           "URL"
+#define macModule							"mac"
 #define UsernameModule                      "Username"
 #define PasswordModule                      "Password"
 #define PeriodicInformIntervalModule        "PeriodicInformInterval"
@@ -340,7 +355,7 @@ struct cwmp_st
 
 	event_global_t    event_global;
 
-	transfer_t    transfer_info;      //ÓÃÓÚDownloadºÍUpload
+	transfer_t    transfer_info;      //ï¿½ï¿½ï¿½ï¿½Downloadï¿½ï¿½Upload
 
 	queue_t  *	queue;
 

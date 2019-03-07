@@ -50,7 +50,7 @@ PROGRAMS = $(bin_PROGRAMS)
 am_cwmpd_OBJECTS = cwmpd-conf.$(OBJEXT) cwmpd-cwmpd.$(OBJEXT) \
 	cwmpd-httpd.$(OBJEXT) cwmpd-process.$(OBJEXT) \
 	cwmpd-thread.$(OBJEXT) cwmpd-agent.$(OBJEXT) \
-	cwmpd-data_model.$(OBJEXT)
+	cwmpd-data_model.$(OBJEXT) cwmpd-libtcapi.$(OBJEXT)
 cwmpd_OBJECTS = $(am_cwmpd_OBJECTS)
 cwmpd_DEPENDENCIES =
 cwmpd_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
@@ -192,7 +192,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-cwmpd_SOURCES = conf.c  cwmpd.c  httpd.c  process.c  thread.c agent.c modules/data_model.c 
+cwmpd_SOURCES = conf.c  cwmpd.c  httpd.c  process.c  thread.c agent.c modules/data_model.c  libtcapi.c
 AM_CPPFLAGS = -DUSE_CWMP_MEMORY_POOL -I$(top_srcdir)/include  -I$(top_srcdir)/cwmpd/include -I$(top_srcdir)/libpool/include  -I$(top_srcdir)/libxmlet/include -I$(top_srcdir)/libcwmp/include 
 cwmpd_LDADD = -L$(top_srcdir)/libpool/src -L$(top_srcdir)/libxmlet/src -L$(top_srcdir)/libcwmp/src  -lpool -lxmlet  -lcwmp  -lpthread
 cwmpd_CPPFLAGS = $(AM_CPPFLAGS) 
@@ -289,6 +289,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cwmpd-cwmpd.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cwmpd-data_model.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cwmpd-httpd.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cwmpd-libtcapi.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cwmpd-process.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cwmpd-thread.Po@am__quote@
 
@@ -410,6 +411,20 @@ cwmpd-data_model.obj: modules/data_model.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='modules/data_model.c' object='cwmpd-data_model.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cwmpd_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cwmpd-data_model.obj `if test -f 'modules/data_model.c'; then $(CYGPATH_W) 'modules/data_model.c'; else $(CYGPATH_W) '$(srcdir)/modules/data_model.c'; fi`
+
+cwmpd-libtcapi.o: libtcapi.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cwmpd_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cwmpd-libtcapi.o -MD -MP -MF $(DEPDIR)/cwmpd-libtcapi.Tpo -c -o cwmpd-libtcapi.o `test -f 'libtcapi.c' || echo '$(srcdir)/'`libtcapi.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/cwmpd-libtcapi.Tpo $(DEPDIR)/cwmpd-libtcapi.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='libtcapi.c' object='cwmpd-libtcapi.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cwmpd_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cwmpd-libtcapi.o `test -f 'libtcapi.c' || echo '$(srcdir)/'`libtcapi.c
+
+cwmpd-libtcapi.obj: libtcapi.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cwmpd_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cwmpd-libtcapi.obj -MD -MP -MF $(DEPDIR)/cwmpd-libtcapi.Tpo -c -o cwmpd-libtcapi.obj `if test -f 'libtcapi.c'; then $(CYGPATH_W) 'libtcapi.c'; else $(CYGPATH_W) '$(srcdir)/libtcapi.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/cwmpd-libtcapi.Tpo $(DEPDIR)/cwmpd-libtcapi.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='libtcapi.c' object='cwmpd-libtcapi.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cwmpd_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cwmpd-libtcapi.obj `if test -f 'libtcapi.c'; then $(CYGPATH_W) 'libtcapi.c'; else $(CYGPATH_W) '$(srcdir)/libtcapi.c'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo

@@ -96,7 +96,7 @@ int cwmp_event_global_init(cwmp_t * cwmp)
     }
     memset(&cwmp->event_global, 0, sizeof(event_global_t));
     
-    //ÅĞ¶ÏÅäÖÃÎÄ¼şÊÇ·ñ´æÔÚ
+    //ï¿½Ğ¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½
     if(access(cwmp->event_filename, F_OK) == -1)
     {
         return CWMP_ERROR;
@@ -119,7 +119,7 @@ int cwmp_event_global_init(cwmp_t * cwmp)
     return CWMP_OK;
 }
 
-//°ÑÊÂ¼şĞÅÏ¢Ğ´ÈëÎÄ¼şÖĞ
+//ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½Ï¢Ğ´ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½
 int cwmp_event_file_save(cwmp_t * cwmp)
 {
     FILE    *fp = NULL;
@@ -149,7 +149,7 @@ int cwmp_event_file_save(cwmp_t * cwmp)
 
 
 
-//Éè±¸Æô¶¯ÒÔºó£¬Ò»Ğ©ÊÂ¼şĞèÒªÉÏ±¨
+//ï¿½è±¸ï¿½ï¿½ï¿½ï¿½ï¿½Ôºï¿½Ò»Ğ©ï¿½Â¼ï¿½ï¿½ï¿½Òªï¿½Ï±ï¿½
 int cwmp_event_init(cwmp_t *cwmp)
 {
     int     bootstrap_flag = 0;
@@ -174,6 +174,8 @@ int cwmp_event_init(cwmp_t *cwmp)
     {
 	cwmp->event_global.event_flag = EVENT_REBOOT_BOOTSTRAP_FLAG;    
 	cwmp_event_set_value(cwmp, INFORM_BOOTSTRAP, 1, NULL, 0, 0, 0);
+	//cwmp_event_set_value(cwmp, INFORM_BOOT, 1, NULL, 0, 0, 0);
+	cwmp_event_set_value(cwmp, INFORM_VALUECHANGE, 1, NULL, 0, 0, 0);
     }    
     else    //reboot
     {
@@ -200,7 +202,7 @@ int cwmp_event_init(cwmp_t *cwmp)
 }
 
 /*
-//ÉèÖÃÄ³¸öÊÂ¼şµÄcommandkey
+//ï¿½ï¿½ï¿½ï¿½Ä³ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½commandkey
 int cwmp_event_set_commandkey(cwmp_t *cwmp, const int event, const char *cmd_key, time_t start)
 {
     cwmp_log_debug( "cwmp_event_set_commandkey begin, event=%d\n", event);
@@ -290,7 +292,7 @@ int cwmp_event_set_value(cwmp_t *cwmp,  int event,   int value, const char * cmd
 }
 
 /*
-//ÉèÖÃÄ³¸öÊÂ¼şµÄÖµ
+//ï¿½ï¿½ï¿½ï¿½Ä³ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½Öµ
 int cwmp_event_set_value1(cwmp_t *cwmp,  int event,   int value)
 {
     cwmp_log_debug( "cwmp_event_set_value begin, event=%d, value=%d\n", event, value);
@@ -436,7 +438,7 @@ size_t cwmp_write_callback(void *ptr, size_t size, size_t nmemb, void *data)
 
 
 
-//Çå³ıµôÏà¹ØµÄĞÅÏ¢
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Øµï¿½ï¿½ï¿½Ï¢
 int cwmp_event_clear_active(cwmp_t *cwmp)
 {
     int     i;
@@ -458,7 +460,6 @@ int cwmp_event_clear_active(cwmp_t *cwmp)
         {
             continue;
         }
-
 
 	switch(pec[i]->event)
 	{
@@ -504,7 +505,7 @@ int cwmp_event_clear_active(cwmp_t *cwmp)
     cwmp->el->count = 0;
     pthread_mutex_unlock(&cwmp->event_mutex);
 
-    //Çå³ıValue Change
+    //ï¿½ï¿½ï¿½Value Change
     /*
     if(notify_flag == 1)
     {
@@ -520,10 +521,10 @@ int cwmp_event_clear_active(cwmp_t *cwmp)
                 continue;
             }
 
-            //´Óvalue change hashÈ¥³ı
+            //ï¿½ï¿½value change hashÈ¥ï¿½ï¿½
             hash_set(cwmp->ht_val_change, (void*)tmp->name, strlen(tmp->name), NULL);
 
-            //ÊÍ·ÅÄÚ´æ
+            //ï¿½Í·ï¿½ï¿½Ú´ï¿½
             if(tmp->value)
             {
                 free_check(tmp->value);
@@ -537,7 +538,7 @@ int cwmp_event_clear_active(cwmp_t *cwmp)
 }
 
 
-//È¡µÃactive eventÒÔ¼°count
+//È¡ï¿½ï¿½active eventï¿½Ô¼ï¿½count
 /*
 static int get_active_event_list(cwmp_t *cwmp, event_list_t **pevent_list, int *pevt_count)
 {

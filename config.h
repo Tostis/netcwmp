@@ -11,7 +11,7 @@
 #define BUILD_OS linux-gnu
 
 /* cpu vendor in building environment */
-#define BUILD_VENDOR unknown
+#define BUILD_VENDOR pc
 
 /* Define to 1 if the `closedir' function returns void instead of `int'. */
 /* #undef CLOSEDIR_VOID */
@@ -219,11 +219,14 @@
 #define HOST_OS linux-gnu
 
 /* cpu vendor of host environment */
-#define HOST_VENDOR unknown
+#define HOST_VENDOR pc
 
 /* Define to 1 if `lstat' dereferences a symlink specified with a trailing
    slash. */
 #define LSTAT_FOLLOWS_SLASHED_SYMLINK 1
+
+/* Define to the sub-directory where libtool stores uninstalled libraries. */
+#define LT_OBJDIR ".libs/"
 
 /* Name of package */
 #define PACKAGE "library"

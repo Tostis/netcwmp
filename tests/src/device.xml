@@ -26,7 +26,7 @@
         <param name="ConnectionRequestPassword"     rw="1"      noti_rw="1"  get_func="cpe_get_igd_ms_connectionrequestpassword" set_func="cpe_set_igd_ms_connectionrequestpassword"></param>
         <param name="Username"                      rw="1"      noti_rw="1"  get_func="cpe_get_igd_ms_username"      set_func="cpe_set_igd_ms_username"></param>
         <param name="Password"                      rw="1"      noti_rw="1"  get_func="cpe_get_igd_ms_password"     set_func="cpe_set_igd_ms_password"></param>
-        <param name="URL"          noti_rw="1"      rw="1"                   get_func="cpe_get_igd_ms_url"  set_func="cpe_get_igd_ms_url"></param>
+        <param name="URL"          noti_rw="1"      rw="1"                   get_func="cpe_get_igd_ms_url"  set_func="cpe_set_igd_ms_url"></param>
         <param name="PeriodicInformEnable"          rw="1" noti_rw="1" type="s" get_func="TRF_Get_MS_PeriodicInformEnable"      set_func="TRF_Set_MS_PeriodicInformEnable"></param>
         <param name="PeriodicInformInterval"        rw="1" noti_rw="1"  get_func="TRF_Get_MS_PeriodicInformInterval"    set_func="TRF_Set_MS_PeriodicInformInterval"></param>
         <param name="PeriodicInformTime"            rw="1"          type="s" get_func="TRF_Get_MS_PeriodicInformTime"        set_func="TRF_Set_MS_PeriodicInformTime"></param>

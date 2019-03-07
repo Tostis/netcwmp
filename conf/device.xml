@@ -2,31 +2,43 @@
 <cwmp>
 	<model>
 		<object name="InternetGatewayDevice">
-			<param name="DeviceSummary" get_func="TRF_Get_DeviceSummary"/>
-			<param name="LANDeviceNumberOfEntries" get_func="TRF_Get_LANDeviceNumberOfEntries"/>
-			<param name="WANDeviceNumberOfEntries" get_func="TRF_Get_WANDeviceNumberOfEntries"/>
+			<param name="DeviceSummary" get_func="cpe_get_igd_device_summary"/>
+			<param name="LANDeviceNumberOfEntries" type="uint" get_func="cpe_get_igd_lan_device_number_of_entries"/>
+			<param name="WANDeviceNumberOfEntries" type="uint" get_func="cpe_get_igd_wan_device_number_of_entries"/>
 			<object name="DeviceInfo">
 				<param name="SpecVersion" get_func="cpe_get_igd_di_specversion"/>
 				<param name="HardwareVersion" get_func="cpe_get_igd_di_hardwareversion"/>
-				<param name="SoftwareVersion" rw="1" get_func="cpe_get_igd_di_softwareversion" set_func="cpe_set_igd_di_softwareversion"/>
+				<param name="SoftwareVersion" get_func="cpe_get_igd_di_softwareversion"/>
 				<param name="ProvisioningCode" rw="1" get_func="cpe_get_igd_di_provisioningcode" set_func="cpe_set_igd_di_provisioningcode"/>
 				<param name="Manufacturer" get_func="cpe_get_igd_di_manufacturer"/>
 				<param name="ManufacturerOUI" get_func="cpe_get_igd_di_manufactureroui"/>
 				<param name="ProductClass" get_func="cpe_get_igd_di_productclass"/>
 				<param name="SerialNumber" get_func="cpe_get_igd_di_serialnumber"/>
-			</object>
+				<object name="X_NGB_CBAT">
+					<object name="CNU" rw="1" refresh_func="cpe_refresh_igd_cnu">
+						<object name="{i}">
+							<param name="MACAddress" get_func="cpe_get_igd_di_CNU_MACAddress"/>
+							<param name="deviceType" get_func="cpe_get_igd_di_CNU_deviceType"/>
+							<param name="ConnectionStatus" get_func="cpe_get_igd_di_CNU_ConnectionStatus"/>
+							<param name="firewareVersion" get_func="cpe_get_igd_di_CNU_firewareVersion"/>
+						</object>
+					</object>
+				</object>
+			</object>		
 			<object name="ManagementServer">
 				<param name="ConnectionRequestURL" get_func="cpe_get_igd_ms_connectionrequesturl"/>
 				<param name="ConnectionRequestUsername" rw="1" noti_rw="1" get_func="cpe_get_igd_ms_connectionrequestusername" set_func="cpe_set_igd_ms_connectionrequestusername"/>
 				<param name="ConnectionRequestPassword" rw="1" noti_rw="1" get_func="cpe_get_igd_ms_connectionrequestpassword" set_func="cpe_set_igd_ms_connectionrequestpassword"/>
 				<param name="Username" rw="1" noti_rw="1" get_func="cpe_get_igd_ms_username" set_func="cpe_set_igd_ms_username"/>
 				<param name="Password" rw="1" noti_rw="1" get_func="cpe_get_igd_ms_password" set_func="cpe_set_igd_ms_password"/>
-				<param name="URL" noti_rw="1" rw="1" get_func="cpe_get_igd_ms_url" set_func="cpe_get_igd_ms_url"/>
-				<param name="PeriodicInformEnable" rw="1" noti_rw="1" type="s" get_func="" set_func=""/>
-				<param name="PeriodicInformInterval" rw="1" noti_rw="1" get_func="" set_func=""/>
+				<param name="URL" noti_rw="1" rw="1" get_func="cpe_get_igd_ms_url" set_func="cpe_set_igd_ms_url"/>
+				<param name="PeriodicInformEnable" rw="1" noti_rw="1" type="s" get_func="cpe_get_igd_ms_PeriodicInformEnable" set_func="cpe_set_igd_ms_PeriodicInformEnable"/>
+				<param name="PeriodicInformInterval" rw="1" noti_rw="1" get_func="cpe_get_igd_ms_PeriodicInformInterval" set_func="cpe_set_igd_ms_PeriodicInformInterval"/>
 				<param name="PeriodicInformTime" rw="1" type="s" get_func="" set_func=""/>
-				<param name="ParameterKey" get_func="" set_func=""/>
-				<param name="UDPConnectionRequestAddress" get_func="" set_func=""/>
+				<param name="mac" type="s" get_func="cpe_get_igd_ms_mac"/>
+				<param name="ipaddr" type="s" get_func="cpe_get_igd_ms_ipaddr"/>
+				<!-- <param name="ParameterKey" get_func="" set_func=""/> -->
+				<!-- <param name="UDPConnectionRequestAddress" get_func="" set_func=""/>
 				<param name="UDPConnectionRequestAddressNotificationLimit" get_func=""/>
 				<param name="STUNEnable" rw="1" type="s" get_func="" set_func=""/>
 				<param name="STUNServerAddress" rw="1" get_func="" set_func=""/>
@@ -35,55 +47,115 @@
 				<param name="STUNPassword" rw="1" get_func="" set_func=""/>
 				<param name="STUNMaximumKeepAlivePeriod" rw="1" type="s" get_func="" set_func=""/>
 				<param name="STUNMinimumKeepAlivePeriod" rw="1" type="s" get_func="" set_func=""/>
-				<param name="NATDetected" type="s" get_func="" set_func=""/>
+				<param name="NATDetected" type="s" get_func="" set_func=""/> -->
 			</object>
 			<object name="WANDevice" rw="1" refresh_func="cpe_refresh_igd_wandevice">
 				<object name="{i}">
-					<param name="WANConnectionNumberOfEntries" get_func=""/>
-					<object name="WANConnectionDevice" refresh_func="cpe_refresh_igd_wanconnectiondevice">
+					<param name="WANConnectionNumberOfEntries" type="uint" get_func="cpe_get_igd_WANConnectionDevice_WANConnectionNumberOfEntries"/>
+					<object name="WANConnectionDevice" rw="1" refresh_func="cpe_refresh_igd_wanconnectiondevice">
 						<object name="{i}">
-							<param name="WANIPConnectionNumberOfEntries" get_func=""/>
-							<param name="WANPPPConnectionNumberOfEntries" get_func=""/>
-							<object name="WANIPConnection" refresh_func="cpe_refresh_igd_wanipconnection">
+							<param name="WANIPConnectionNumberOfEntries" rw="1" type="uint" get_func="cpe_get_igd_WANConnectionDevice_WANIPConnectionNumberOfEntries"/>
+							<param name="WANPPPConnectionNumberOfEntries" rw="1" type="uint" get_func="cpe_get_igd_WANConnectionDevice_WANPPPConnectionNumberOfEntries"/>
+							<object name="X_NGB_WANEponLinkConfig">
+								<param name="VLANIDMark" rw="1" type="uint" get_func="cpe_get_X_NGB_WANEponLinkConfig_VLANIDMark" set_func="cpe_set_X_NGB_WANEponLinkConfig_VLANIDMark"/>
+								<param name="X_NGB_802_1p" rw="1" type="uint" get_func="cpe_get_X_NGB_WANEponLinkConfig_X_NGB_802_1p" set_func="cpe_set_X_NGB_WANEponLinkConfig_X_NGB_802_1p"/>
+							</object>
+							<object name="WANIPConnection" rw="1" refresh_func="cpe_refresh_igd_wanipconnection">
 								<object name="{i}">
-									<param name="Enable" rw="1" type="s" get_func="" set_func=""/>
-									<param name="AddressingType" noti_rw="1" rw="1" get_func="" set_func=""/>
-									<param name="ExternalIPAddress" noti_rw="1" rw="1" get_func="" set_func=""/>
-									<param name="SubnetMask" noti_rw="1" rw="1" get_func="" set_func=""/>
-									<param name="DefaultGateway" rw="1" get_func="" set_func=""/>
-									<param name="DNSServers" rw="1" get_func="" set_func=""/>
-									<param name="MACAddress" rw="1" get_func="" set_func=""/>
-									<object name="Stats">
+									<param name="Enable" rw="1" type="bool" get_func="cpe_get_igd_WANIPConnection_Enable" set_func="cpe_set_igd_WANIPConnection_Enable"/>
+									<param name="AddressingType" noti_rw="1" rw="1" type="s" get_func="cpe_get_igd_WANIPConnection_AddressingType" set_func="cpe_set_igd_WANIPConnection_AddressingType" />
+									<param name="ExternalIPAddress" noti_rw="1" rw="1" get_func="cpe_get_igd_WANIPConnection_ExternalIPAddress" set_func="cpe_set_igd_WANIPConnection_ExternalIPAddress"/>
+									<param name="SubnetMask" noti_rw="1" rw="1" get_func="cpe_get_igd_WANIPConnection_SubnetMask" set_func="cpe_set_igd_WANIPConnection_SubnetMask"/>
+									<param name="DefaultGateway" rw="1" get_func="cpe_get_igd_WANIPConnection_DefaultGateway" set_func="cpe_set_igd_WANIPConnection_DefaultGateway"/>
+									<param name="DNSServers" rw="1" get_func="cpe_get_igd_WANIPConnection_DNSServers" set_func="cpe_set_igd_WANIPConnection_DNSServers"/>
+									<param name="MACAddress" rw="1" get_func="cpe_get_igd_WANIPConnection_MACAddress" set_func="cpe_set_igd_WANIPConnection_MACAddress"/>
+									<param name="X_NGB_ServiceList" rw="1" type="s" get_func="cpe_get_igd_WANIPConnection_X_NGB_ServiceList" set_func="cpe_set_igd_WANIPConnection_X_NGB_ServiceList" />
+									<param name="MTU" rw="1" type="uint" get_func="cpe_get_igd_WANIPConnection_MTU" set_func="cpe_get_igd_WANIPConnection_MTU" />
+									<param name="PossibleConnectionTypes" rw="1" type="s64" get_func="cpe_get_igd_WANIPConnection_PossibleConnectionTypes" set_func="cpe_set_igd_WANIPConnection_PossibleConnectionTypes" />
+									<!-- <object name="Stats">
 										<param name="EthernetBytesSent" get_func=""/>
 										<param name="EthernetBytesReceived" get_func=""/>
 										<param name="EthernetPacketsSent" get_func=""/>
 										<param name="EthernetPacketsReceived" get_func=""/>
-									</object>
+									</object> -->
 								</object>
 							</object>
-							<object name="WANPPPConnection" refresh_func="cpe_refresh_igd_wanpppconnection">
+							<object name="WANPPPConnection" rw="1" refresh_func="cpe_refresh_igd_wanpppconnection">
 								<object name="{i}">
-									<param name="Enable" rw="1" type="s" get_func="" set_func=""/>
-									<param name="DefaultGateway" get_func=""/>
-									<param name="Username" noti_rw="1" rw="1" get_func="" set_func=""/>
-									<param name="Password" noti_rw="1" rw="1" get_func="" set_func=""/>
-									<param name="ExternalIPAddress" get_func=""/>
-									<param name="DNSServers" rw="1" get_func="" set_func=""/>
-									<param name="MACAddress" rw="1" type="s" get_func="" set_func=""/>
-									<param name="ConnectionTrigger" rw="1" get_func="" set_func=""/>
-									<object name="Stats">
+									<param name="X_NGB_LanInterface" type="s" get_func="cpe_get_igd_WANPPPConnection_X_NGB_LanInterface" set_func=""/>
+									<param name="X_NGB_ServiceList" type="s" get_func="cpe_get_igd_WANPPPConnection_X_NGB_ServiceList" set_func=""/>
+									<param name="Enable" rw="1" type="s" get_func="cpe_get_igd_WANPPPConnection_Enable" set_func="cpe_set_igd_WANPPPConnection_Enable"/>
+									<param name="ConnectionType" rw="1" type="s" get_func="cpe_get_igd_WANPPPConnection_ConnectionType" set_func="cpe_set_igd_WANPPPConnection_ConnectionType"/>
+									<param name="DefaultGateway" get_func="cpe_get_igd_WANPPPConnection_DefaultGateway"/>
+									<param name="Username" noti_rw="1" rw="1" get_func="cpe_get_igd_WANPPPConnection_Username" set_func="cpe_set_igd_WANPPPConnection_Username"/>
+									<param name="Password" noti_rw="1" rw="1" get_func="cpe_get_igd_WANPPPConnection_Password" set_func="cpe_set_igd_WANPPPConnection_Password"/>
+									<param name="ExternalIPAddress" get_func="cpe_get_igd_WANPPPConnection_ExternalIPAddress"/>
+									<param name="DNSServers" rw="1" get_func="cpe_get_igd_WANPPPConnection_DNSServers" set_func="cpe_set_igd_WANPPPConnection_DNSServers"/>
+									<param name="MACAddress" rw="1" type="s" get_func="cpe_get_igd_WANPPPConnection_MACAddress" set_func="cpe_set_igd_WANPPPConnection_MACAddress"/>
+									<param name="ConnectionTrigger" rw="1" get_func="cpe_get_igd_WANPPPConnection_ConnectionTrigger" set_func="cpe_set_igd_WANPPPConnection_ConnectionTrigger"/>
+									<!-- <object name="Stats">
 										<param name="EthernetBytesSent" get_func=""/>
 										<param name="EthernetBytesReceived" get_func=""/>
 										<param name="EthernetPacketsSent" get_func=""/>
 										<param name="EthernetPacketsReceived" get_func=""/>
-									</object>
+									</object> -->
+								</object>
+							</object>
+							<object name="WANEthernetLinkConfig">
+								<param name="X_NGB_VLANEnabled" type="s" get_func="cpe_get_igd_WANEthernetLinkConfig_X_NGB_VLANEnabled"/>
+								<param name="X_NGB_VLAN" type="uint" get_func="cpe_get_igd_WANEthernetLinkConfig_X_NGB_VLAN"/>
+								<param name="X_NGB_802_1p" type="uint" get_func="cpe_get_igd_WANEthernetLinkConfig_X_NGB_802_1p"/>
+							</object>
+						</object>
+					</object>
+				</object>
+			</object>
+			<object name="LANDevice" rw="1" refresh_func="cpe_refresh_igd_landevice">
+				<object name="{i}">
+					<param name="LANEthernetInterfaceNumberOfEntries" rw="1" type="uint" get_func="cpe_get_igd_LANDevice_LANEthernetInterfaceNumberOfEntries" set_func="cpe_set_igd_LANDevice_LANEthernetInterfaceNumberOfEntries" />
+					<param name="LANUSBInterfaceNumberOfEntries" rw="1" type="uint" get_func="cpe_get_igd_LANDevice_LANUSBInterfaceNumberOfEntries" set_func="cpe_set_igd_LANDevice_LANUSBInterfaceNumberOfEntries" />
+					<param name="LANWLANConfigurationNumberOfEntries" rw="1" type="uint" get_func="cpe_get_igd_LANDevice_LANWLANConfigurationNumberOfEntries" set_func="cpe_set_igd_LANDevice_LANWLANConfigurationNumberOfEntries" />
+					<object name="LANEthernetInterfaceConfig" refresh_func="cpe_refresh_igd_lanethernetinterfaceconfig">
+						<object name="{i}">
+							<param name="Status" type="s" get_func="cpe_get_igd_LANEthernetInterfaceConfig_Status" set_func=""/>
+							<param name="Enable" rw="1" type="bool" get_func="cpe_get_igd_LANEthernetInterfaceConfig_Enable" set_func="cpe_set_igd_LANEthernetInterfaceConfig_Enable"/>
+							<param name="MACAddress" type="s" get_func="cpe_get_igd_LANEthernetInterfaceConfig_MACAddress" set_func=""/>
+							<param name="MACAddressControlEnabled" rw="1" type="bool" get_func="cpe_get_igd_LANEthernetInterfaceConfig_MACAddressControlEnabled" set_func="cpe_set_igd_LANEthernetInterfaceConfig_MACAddressControlEnabled"/>
+							<param name="MaxBitRate" rw="1" type="s" get_func="cpe_get_igd_LANEthernetInterfaceConfig_MaxBitRate" set_func="cpe_set_igd_LANEthernetInterfaceConfig_MaxBitRate"/>
+							<param name="DuplexMode" rw="1" type="s" get_func="cpe_get_igd_LANEthernetInterfaceConfig_DuplexMode" set_func="cpe_set_igd_LANEthernetInterfaceConfig_DuplexMode"/>
+							<param name="Name" type="s" get_func="cpe_get_igd_LANEthernetInterfaceConfig_Name" set_func=""/>
+						</object>
+					</object>
+					<object name="LANHostConfigManagement">
+						<param name="MaxAddress" rw="1" type="s" set_func="" get_func="" />
+						<param name="MinAddress" rw="1" type="s" set_func="" get_func="" />
+						<param name="DHCPServerEnable" rw="1" type="bool" set_func="" get_func="" />
+						<param name="DNSServers" rw="1" type="s64" set_func="" get_func="" />
+						<param name="DHCPLeaseTime" rw="1" type="int" set_func="" get_func="" />
+						<object name="IPInterface" refresh_func="cpe_refresh_igd_ipinterface">
+							<object name="{i}">
+								<param name="IPInterfaceIPAddress" rw="1" type="s" set_func="" get_func="" />
+								<param name="IPInterfaceSubnetMask" rw="1" type="s" set_func="" get_func="" />
+							</object>
+						</object>
+					</object>
+					<object name="WLANConfiguration" rw="1" refresh_func="cpe_refresh_igd_wlanconfiguration">
+						<object name="{i}">
+							<param name="BeaconType" rw="1" get_func="cpe_get_igd_WLANConfiguration_BeaconType" set_func="cpe_set_igd_WLANConfiguration_BeaconType"/>
+							<param name="Enable" rw="1" type="bool" get_func="cpe_get_igd_WLANConfiguration_Enable" set_func="cpe_set_igd_WLANConfiguration_Enable"/>
+							<param name="WPAEncryptionModes" rw="1" get_func="cpe_get_igd_WLANConfiguration_WPAEncryptionModes" set_func="cpe_set_igd_WLANConfiguration_WPAEncryptionModes"/>
+							<param name="WPAAuthenticationMode" rw="1" get_func="cpe_get_igd_WLANConfiguration_WPAAuthenticationMode" set_func="cpe_set_igd_WLANConfiguration_WPAAuthenticationMode"/>
+							<param name="SSID" rw="1" get_func="cpe_get_igd_WLANConfiguration_SSID" set_func="cpe_set_igd_WLANConfiguration_SSID"/>
+							<object name="PreSharedKey" refresh_func="cpe_refresh_igd_presharedKey">
+								<object name="{i}">
+									<param name="PreSharedKey" rw="1" type="s64" get_func="cpe_get_igd_PreSharedKey_PreSharedKey" set_func="cpe_set_igd_PreSharedKey_PreSharedKey"/>
 								</object>
 							</object>
 						</object>
 					</object>
 				</object>
 			</object>
-			<object name="IPPingDiagnostics">
+			<!-- <object name="IPPingDiagnostics">
 				<param name="DiagnosticsState" rw="1" get_func="" set_func=""/>
 				<param name="Interface" rw="1" get_func="" set_func=""/>
 				<param name="Host" rw="1" get_func="" set_func=""/>
@@ -96,8 +168,8 @@
 				<param name="AverageResponseTime" get_func=""/>
 				<param name="MinimumResponseTime" get_func=""/>
 				<param name="MaximumResponseTime" get_func=""/>
-			</object>
-			<object name="TraceRouteDiagnostics">
+			</object> -->
+			<!-- <object name="TraceRouteDiagnostics">
 				<param name="DiagnosticsState" rw="1" get_func="" set_func=""/>
 				<param name="Interface" rw="1" get_func="" set_func=""/>
 				<param name="Host" rw="1" get_func="" set_func=""/>
@@ -116,7 +188,7 @@
 						<param name="HopRTTimes" get_func=""/>
 					</object>
 				</object>
-			</object>
+			</object> -->
 		</object>
 	</model>
 	<inform>
@@ -125,7 +197,6 @@
 		</paramlist>
 	</inform>
 	<rpc>
-
-  
-  </rpc>
+	
+  	</rpc>
 </cwmp>
